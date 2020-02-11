@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/stripe/stripe-go"
@@ -44,9 +43,11 @@ func main() {
 			return err
 		}
 		
-		fmt.Println(ch)
+		if ch.Status != "succeeded" {
+			return c.JSON(500, echo.Map{"msg": "your payment is failed"})
+		}
 		
-		return nil
+		return c.JSON(200, echo.Map{"msg": "your payment is completed"})
 	})
 	
 	log.Fatal(app.Start(":5300"))
